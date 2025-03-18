@@ -15,7 +15,7 @@
 
 {% block breadcrumb_content %}
   {{ super() }}
-  <li class="active"><a href="">{{ h.resource_display_name(res)|truncate(30) }}</a></li>
+  <li class="active"><a href="" aria-current="page" aria-label="{{ _('Current resource: {name}').format(name=h.resource_display_name(res)) }}">{{ h.resource_display_name(res)|truncate(30) }}</a></li>
 {% endblock %}
 
 {% block pre_primary %}
@@ -41,7 +41,7 @@
                   {% elif not res.has_views and not res.url_type == 'upload' %}
                     <i class="fa fa-external-link"></i> {{ _('Go to resource') }}
                   {% else %}
-                    <i class="fa fa-arrow-circle-o-down"></i> {{ _('Download') }}
+                    <i class="fa fa-arrow-circle-down"></i> {{ _('Download') }}
                   {% endif %}
                 </a>
                 {% block download_resource_button %}
@@ -104,25 +104,18 @@
       {% block data_preview %}
       {% block resource_view %}
         {% block resource_view_nav %}
-          {% set resource_preview = h.resource_preview(resource, package) %}
           {% snippet "package/snippets/resource_views_list.html",
              views=resource_views,
              pkg=pkg,
              is_edit=false,
              view_id=current_resource_view['id'],
-             resource_preview=resource_preview,
              resource=resource,
              extra_class="nav-tabs nav-tabs-plain"
            %}
         {% endblock %}
           {% block resource_view_content %}
             <div class="resource-view">
-              {% set resource_preview = h.resource_preview(resource, package) %}
-              {% set views_created = res.has_views or resource_preview %}
-              {% if views_created %}
-                {% if resource_preview and not current_resource_view %}
-                  {{ h.resource_preview(resource, package) }}
-                {% else %}
+              {% if resource_views %}
                   {% for resource_view in resource_views %}
                     {% if resource_view == current_resource_view %}
                       {% snippet 'package/snippets/resource_view.html',
@@ -141,7 +134,7 @@
                     <p class="text-muted">
                       <i class="fa fa-info-circle"></i>
                       {{ _("Not seeing the views you were expecting?")}}
-                      <a href="javascript:void(0);" data-toggle="collapse" data-target="#data-view-info">
+                      <a href="javascript:void(0);" data-bs-toggle="collapse" data-bs-target="#data-view-info">
                         {{ _('Click here for more information.') }}</a>
                     </p>
                     <div id="data-view-info" class="collapse">
@@ -221,7 +214,7 @@
     {% snippet "package/snippets/resources.html", pkg=pkg, active=res.id, action='read', is_activity_archive=is_activity_archive %}
   {% endblock %}
 
-  {% block resource_license %}
+  {% block resource_social %}
     {% snippet "snippets/social.html" %}
   {% endblock %}
 {% endblock %}
